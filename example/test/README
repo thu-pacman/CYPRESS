@@ -1,0 +1,22 @@
+1. Build CYPRESS
+```
+cd ../../src/static
+make
+cd ../dynamic
+make
+cd ../../example/test
+```
+
+2. Run original program
+```
+make run
+```
+
+3. Run cypress script
+```
+./cypress_run.sh
+```
+4. Clean
+```
+make clean
+```
