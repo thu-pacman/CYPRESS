@@ -44,6 +44,29 @@ mpirun -np ${nprocs} ./main
 ```
 Please see `./example/test`, we take an example here.
 
+## Output
+An example of "intra_compressed_trace_text_000*":
+```
+|-branch if id=2, else id=4, total times=1                                                                                        
+| 1*T;                                                                                                                            
+| |-p2p id=15, total times=1, sum_time=6, sum_sqr_time=36                                                                         
+| | comm=64,src=0,tag=0,dest=1,times=1,bytes=(15);                                                                                
+|-else id=4                                                                                                                       
+| |-branch if id=5, else id=0, total times=0                                                                                      
+| |                                                                                                                               
+| | |-p2p id=12, total times=0, sum_time=0, sum_sqr_time=0                                                                        
+| | |                                                                                                                             
+| |-else id=0                                                                                                                     
+|-loop id=7, total times=5                                                                                                        
+| 1*5;                                                                                                                            
+| |-branch if id=8, else id=0, total times=5                                                                                      
+| | 5*T;                                                                                                                          
+| | |-coll id=40, total times=5, sum_time=155, sum_sqr_time=7757                                                                  
+| | | 5*[comm=64,root=65535,sendbytes=-1,recvbytes=-1; ];                                                                         
+| |-else id=0 
+```
+
+
 ## Publication
 J. Zhai, J. Hu, X. Tang, X. Ma and W. Chen, "CYPRESS: Combining Static and Dynamic Analysis for Top-Down Communication Trace Compression," SC '14: Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis, New Orleans, LA, USA, 2014, pp. 143-153, doi: 10.1109/SC.2014.17.
 
