@@ -17,7 +17,7 @@ make
 `mpi.so` is built.
 ### Dynamic phase:
 ```
-cd ../dynamic
+cd ./src/dynamic
 make
 ```
 `libmpit.a` is built.
