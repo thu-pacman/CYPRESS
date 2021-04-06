@@ -7,27 +7,42 @@ CYPRESS: Combining Static and Dynamic Analysis for Top-Down Communication Trace 
 
    **If you are not using Intel MPI, then there will be some errors about type declaration**
 
+## Build
+
+### Static phase:
+```
+cd ./src/static
+make
+```
+`mpi.so` is built.
+### Dynamic phase:
+```
+cd ../dynamic
+make
+```
+`libmpit.a` is built.
+
 ## Usage
+
 For C programs:
 ```
-clang -c -emit-llvm -I${MPI_DIR}/include main.c -o main.s
-llvm-as main.s -o main.bc
-opt -load ${CYPRESS_DIR}/static/mpi.so -mpi < main.bc > main.o                                                                              
+clang -c -emit-llvm -I${MPI_DIR}/include main.c -o main.bc
+opt -load ${CYPRESS_DIR}/src/static/mpi.so -mpi < main.bc > main.o                                                                              
 llc main.o -o main.o.s                                                                                                    
 ${GCC} main.o.s -c -o main.o.o                                                                                                     
-${GCC} main.o.o -o main -L${CYPRESS_DIR}/dynamic -lmpit $(mpicc -show|cut -c5-) -lz
+${GCC} main.o.o -o main -L${CYPRESS_DIR}/src/dynamic -lmpit $(mpicc -show|cut -c5-) -lz
 mpirun -np ${nprocs} ./main
 ```
 For Fortran programs:
 ```
-${GCC} -fplugin=/path/to/dragonegg.so -S -fplugin-arg-dragonegg-emit-ir -I${MPI_DIR}/include main.f -o main.s
-llvm-as main.s -o main.bc
-opt -load ${CYPRESS_DIR}/static/mpi.so -mpi < main.bc > main.o
+${GCC} -fplugin=/path/to/dragonegg.so -S -fplugin-arg-dragonegg-emit-ir -I${MPI_DIR}/include main.f -o main.bc
+opt -load ${CYPRESS_DIR}/src/static/mpi.so -mpi < main.bc > main.o
 llc main.o -o main.o.s
 ${GFORTRAN} main.o.s -c -o main.o.o
-${GFORTRAN} main.o.o -o main -L${CYPRESS_DIR}/dynamic -lmpit $(mpicc -show|cut -c5-) -lz
-mpirun -np 4 ./main 
+${GFORTRAN} main.o.o -o main -L${CYPRESS_DIR}/src/dynamic -lmpit $(mpicc -show|cut -c5-) -lz
+mpirun -np ${nprocs} ./main 
 ```
+Please see `./example/test`, we take an example here.
 
 ## Publication
 J. Zhai, J. Hu, X. Tang, X. Ma and W. Chen, "CYPRESS: Combining Static and Dynamic Analysis for Top-Down Communication Trace Compression," SC '14: Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis, New Orleans, LA, USA, 2014, pp. 143-153, doi: 10.1109/SC.2014.17.
